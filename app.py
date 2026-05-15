@@ -21,35 +21,71 @@ st.set_page_config(
 # --- Custom CSS ---
 st.markdown("""
 <style>
-    .main {
-        background-color: #f4f6f9;
-        font-family: 'Inter', sans-serif;
+    /* Dark Theme Base */
+    .stApp {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #f8fafc;
     }
+    
+    /* Glowing Title */
+    .glow-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 800;
+        font-size: 3.5rem !important;
+        text-align: center;
+        background: linear-gradient(to right, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        margin-bottom: 2rem;
+        padding-top: 1rem;
+    }
+    
+    /* Glassmorphism Cards */
+    .metric-card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+    .metric-card:hover {
+        transform: translateY(-5px);
+        border: 1px solid rgba(56, 189, 248, 0.5);
+    }
+    
+    /* Custom Sidebar */
+    [data-testid="stSidebar"] {
+        background-color: #0f172a;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Styled Buttons */
     .stButton>button {
-        background-color: #2b5c8f;
+        background: linear-gradient(90deg, #0ea5e9 0%, #2563eb 100%);
         color: white;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        padding: 10px 20px;
-        width: 100%;
-        transition: 0.3s;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
     .stButton>button:hover {
-        background-color: #1a3c61;
-        color: white;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transform: scale(1.02);
+        box-shadow: 0 0 15px rgba(37, 99, 235, 0.6);
     }
-    .metric-card {
-        background-color: white;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
-    }
-    h1, h2, h3 {
-        color: #2c3e50;
-    }
+    
+    /* Text Styles */
+    h1, h2, h3 { color: #f1f5f9 !important; }
+    p, label { color: #94a3b8 !important; }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -111,160 +147,176 @@ render_inputs(worst_features, "Worst Features", "📈")
 
 
 # --- Main App Header ---
-st.title("🧬 OncoPredict: Advanced Tumor Diagnostics")
+st.markdown("<h1 class='glow-title'>🧬 OncoPredict: Advanced Tumor Diagnostics</h1>", unsafe_allow_html=True)
 st.markdown("""
-Welcome to the advanced predictive modeling portal. This interface uses an optimized **Random Forest Classifier** to analyze 30 cellular metrics from digitized fine needle aspirate (FNA) images of breast masses, predicting morphological classifications in real-time.
-""")
+<p style='text-align: center; font-size: 1.2rem; margin-top: -1rem; color: #cbd5e1;'>
+    Optimized Predictive Analytics for Clinical Oncology
+</p>
+""", unsafe_allow_html=True)
 st.divider()
 
-# --- Predictions logic ---
-input_df = pd.DataFrame([input_data])[feature_names]
-input_scaled = scaler.transform(input_df)
+# --- Main Tabs ---
+tab1, tab2, tab3 = st.tabs(["📊 Diagnostic Dashboard", "🧠 Model Intelligence", "🔬 About OncoPredict"])
 
-prediction = model.predict(input_scaled)[0]
-probabilities = model.predict_proba(input_scaled)[0]
+with tab1:
+    # --- Predictions logic ---
+    input_df = pd.DataFrame([input_data])[feature_names]
+    input_scaled = scaler.transform(input_df)
 
-# Class mapping (0 = Malignant, 1 = Benign)
-is_malignant = prediction == 0
-pred_label = "Malignant" if is_malignant else "Benign"
-pred_prob = probabilities[0] if is_malignant else probabilities[1]
-pred_color = "red" if is_malignant else "green"
+    prediction = model.predict(input_scaled)[0]
+    probabilities = model.predict_proba(input_scaled)[0]
 
-# --- Top Row: Results & Gauge ---
-col1, col2 = st.columns([1.2, 2])
+    # Class mapping (0 = Malignant, 1 = Benign)
+    is_malignant = prediction == 0
+    pred_label = "Malignant" if is_malignant else "Benign"
+    pred_prob = probabilities[0] if is_malignant else probabilities[1]
+    pred_color = "#ef4444" if is_malignant else "#10b981"
 
-with col1:
-    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-    st.subheader("Diagnostic Assessment")
-    if is_malignant:
-        st.error(f"### 🚨 {pred_label}\nHigh risk indicators detected. Immediate consultation recommended.")
-    else:
-        st.success(f"### ✅ {pred_label}\nMetrics align with benign morphologies.")
-    
-    st.markdown(f"**Confidence Score:** `{pred_prob*100:.1f}%`")
-    
-    # Download Report button
-    report_content = f"--- OncoPredict Diagnostic Report ---\nDate: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-    report_content += f"PREDICTION: {pred_label}\n"
-    report_content += f"CONFIDENCE: {pred_prob*100:.1f}%\n\n-- PATIENT METRICS --\n"
-    for k, v in input_data.items():
-        report_content += f"{k}: {v:.4f}\n"
+    # --- Top Row: Results & Gauge ---
+    col1, col2 = st.columns([1.2, 2])
+
+    with col1:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.subheader("Diagnostic Assessment")
+        if is_malignant:
+            st.error(f"### 🚨 {pred_label}\nHigh risk indicators detected. Immediate consultation recommended.")
+        else:
+            st.success(f"### ✅ {pred_label}\nMetrics align with benign morphologies.")
         
-    st.download_button(
-        label="📄 Download Full Diagnostic Report",
-        data=report_content,
-        file_name=f"OncoPredict_Report_{datetime.now().strftime('%Y%m%d')}.txt",
-        mime="text/plain"
-    )
+        st.markdown(f"**Confidence Score:** `{pred_prob*100:.1f}%`")
+        
+        # Download Report button
+        report_content = f"--- OncoPredict Diagnostic Report ---\nDate: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+        report_content += f"PREDICTION: {pred_label}\n"
+        report_content += f"CONFIDENCE: {pred_prob*100:.1f}%\n\n-- PATIENT METRICS --\n"
+        for k, v in input_data.items():
+            report_content += f"{k}: {v:.4f}\n"
+            
+        st.download_button(
+            label="📄 Download Full Diagnostic Report",
+            data=report_content,
+            file_name=f"OncoPredict_Report_{datetime.now().strftime('%Y%m%d')}.txt",
+            mime="text/plain"
+        )
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        fig_gauge = go.Figure(go.Indicator(
+            mode = "gauge+number",
+            value = pred_prob * 100,
+            domain = {'x': [0, 1], 'y': [0, 1]},
+            title = {'text': f"Confidence Index ({pred_label})", 'font': {'size': 20}},
+            number = {'suffix': "%", 'font': {'size': 40, 'color': pred_color}},
+            gauge = {
+                'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
+                'bar': {'color': pred_color},
+                'bgcolor': "rgba(0,0,0,0)",
+                'borderwidth': 2,
+                'bordercolor': "#334155",
+                'steps': [
+                    {'range': [0, 50], 'color': 'rgba(255, 255, 255, 0.05)'},
+                    {'range': [50, 80], 'color': 'rgba(255, 255, 255, 0.1)'},
+                    {'range': [80, 100], 'color': 'rgba(255, 255, 255, 0.15)'}],
+                'threshold': {
+                    'line': {'color': "#f8fafc", 'width': 3},
+                    'thickness': 0.75,
+                    'value': 90}
+            }
+        ))
+        fig_gauge.update_layout(
+            height=280, 
+            margin=dict(l=10, r=10, t=40, b=10),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font={'color': "#f8fafc"},
+            template='plotly_dark'
+        )
+        st.plotly_chart(fig_gauge, use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    st.divider()
+    st.subheader("Data Analytics & Model Insights")
+    col3, col4 = st.columns(2)
+
+    with col3:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.markdown("#### Patient Biomarkers vs. Demographics")
+        radar_features = mean_features[:10]
+        radar_benign = scaler.transform(pd.DataFrame([mean_benign])[feature_names])[0]
+        radar_malignant = scaler.transform(pd.DataFrame([mean_malignant])[feature_names])[0]
+        idx = [feature_names.tolist().index(f) for f in radar_features]
+        
+        fig_radar = go.Figure()
+        fig_radar.add_trace(go.Scatterpolar(r=radar_benign[idx], theta=radar_features, fill='none', name='Avg Benign Profile', line_color='#10b981', opacity=0.6))
+        fig_radar.add_trace(go.Scatterpolar(r=radar_malignant[idx], theta=radar_features, fill='none', name='Avg Malignant Profile', line_color='#ef4444', opacity=0.6))
+        fig_radar.add_trace(go.Scatterpolar(r=input_scaled[0][idx], theta=radar_features, fill='toself', name='Current Patient', line_color='#38bdf8', fillcolor='rgba(56, 189, 248, 0.2)'))
+        
+        fig_radar.update_layout(
+            polar=dict(radialaxis=dict(visible=False, range=[-3, 5]), bgcolor='rgba(0,0,0,0)'),
+            showlegend=True,
+            legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
+            height=400,
+            margin=dict(l=40, r=40, t=20, b=20),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font={'color': "#f8fafc"},
+            template='plotly_dark'
+        )
+        st.plotly_chart(fig_radar, use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    with col4:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.markdown("#### Random Forest Feature Importance")
+        importances = model.feature_importances_
+        indices = np.argsort(importances)[::-1][:10]
+        top_features = [feature_names[i].replace("worst ", "w_").replace("mean ", "m_") for i in indices]
+        top_importances = importances[indices]
+        
+        fig_bar = px.bar(x=top_importances, y=top_features, orientation='h', color=top_importances, color_continuous_scale="Blues")
+        fig_bar.update_layout(
+            yaxis={'categoryorder':'total ascending'}, 
+            height=400, 
+            coloraxis_showscale=False,
+            margin=dict(l=10, r=10, t=10, b=10),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font={'color': "#f8fafc"},
+            template='plotly_dark'
+        )
+        st.plotly_chart(fig_bar, use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+with tab2:
+    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+    st.subheader("Model Decision Logic")
+    st.markdown("""
+    The system utilizes a **Random Forest Ensemble** with 100+ decision trees. 
+    Each tree votes on the classification based on thresholds learned during training.
+    """)
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.info("**Data Source:** UCI Breast Cancer Wisconsin (Diagnostic)")
+        st.info("**Model Type:** Random Forest Classifier")
+    with col_b:
+        st.info("**Training Samples:** 455 Patients")
+        st.info("**Test Accuracy:** 96.5%")
     st.markdown("</div>", unsafe_allow_html=True)
 
-with col2:
+with tab3:
     st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-    fig_gauge = go.Figure(go.Indicator(
-        mode = "gauge+number",
-        value = pred_prob * 100,
-        domain = {'x': [0, 1], 'y': [0, 1]},
-        title = {'text': f"Confidence Index ({pred_label})", 'font': {'size': 20}},
-        number = {'suffix': "%", 'font': {'size': 40, 'color': pred_color}},
-        gauge = {
-            'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-            'bar': {'color': pred_color},
-            'bgcolor': "white",
-            'borderwidth': 2,
-            'bordercolor': "gray",
-            'steps': [
-                {'range': [0, 50], 'color': '#f0f2f6'},
-                {'range': [50, 80], 'color': '#e1e5ee'},
-                {'range': [80, 100], 'color': '#cdd4e0'}],
-            'threshold': {
-                'line': {'color': "black", 'width': 3},
-                'thickness': 0.75,
-                'value': 90}
-        }
-    ))
-    fig_gauge.update_layout(height=280, margin=dict(l=10, r=10, t=40, b=10))
-    st.plotly_chart(fig_gauge, use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-
-# --- Middle Row: Radar & Feature Importance ---
-st.divider()
-st.subheader("Data Analytics & Model Insights")
-col3, col4 = st.columns(2)
-
-with col3:
-    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-    st.markdown("#### Patient Biomarkers vs. Demographics")
-    # Radar chart for the first 10 'mean' features
-    radar_features = mean_features[:10]
+    st.header("About the Clinical Portal")
+    st.write("""
+    This portal is designed to provide high-fidelity diagnostic predictions 
+    using morphological data from cellular scans. 
     
-    # Scale for radar chart to display harmonized geometric shape
-    radar_benign = scaler.transform(pd.DataFrame([mean_benign])[feature_names])[0]
-    radar_malignant = scaler.transform(pd.DataFrame([mean_malignant])[feature_names])[0]
+    ### How it works:
+    1. **Data Acquisition**: Metrics are extracted from digitized FNA images.
+    2. **Processing**: Features are scaled using a standard normal distribution.
+    3. **Inference**: The pre-trained Random Forest model evaluates the risk.
+    4. **Visualization**: Real-time feedback is provided via interactive charts.
     
-    idx = [feature_names.tolist().index(f) for f in radar_features]
-    
-    fig_radar = go.Figure()
-    
-    fig_radar.add_trace(go.Scatterpolar(
-        r=radar_benign[idx],
-        theta=radar_features,
-        fill='none',
-        name='Avg Benign Profile',
-        line_color='green',
-        opacity=0.6
-    ))
-    fig_radar.add_trace(go.Scatterpolar(
-        r=radar_malignant[idx],
-        theta=radar_features,
-        fill='none',
-        name='Avg Malignant Profile',
-        line_color='red',
-        opacity=0.6
-    ))
-    fig_radar.add_trace(go.Scatterpolar(
-        r=input_scaled[0][idx],
-        theta=radar_features,
-        fill='toself',
-        name='Current Patient',
-        line_color='blue',
-        fillcolor='rgba(0,0,255,0.2)'
-    ))
-    
-    fig_radar.update_layout(
-        polar=dict(
-            radialaxis=dict(visible=False, range=[-3, 5])
-        ),
-        showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
-        height=400,
-        margin=dict(l=40, r=40, t=20, b=20)
-    )
-    st.plotly_chart(fig_radar, use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-with col4:
-    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-    st.markdown("#### Random Forest Feature Importance")
-    importances = model.feature_importances_
-    indices = np.argsort(importances)[::-1][:10] # Top 10 features
-    
-    top_features = [feature_names[i].replace("worst ", "w_").replace("mean ", "m_") for i in indices]
-    top_importances = importances[indices]
-    
-    fig_bar = px.bar(
-        x=top_importances, 
-        y=top_features, 
-        orientation='h',
-        labels={'x': 'Relative Importance', 'y': ''},
-        color=top_importances,
-        color_continuous_scale="Blues"
-    )
-    fig_bar.update_layout(
-        yaxis={'categoryorder':'total ascending'}, 
-        height=400, 
-        coloraxis_showscale=False,
-        margin=dict(l=10, r=10, t=10, b=10)
-    )
-    st.plotly_chart(fig_bar, use_container_width=True)
+    *Note: This is a research prototype.*
+    """)
     st.markdown("</div>", unsafe_allow_html=True)
