@@ -93,10 +93,23 @@ st.markdown("""
 
     /* Fix: Expander Visibility */
     .streamlit-expanderHeader {
-        background-color: rgba(16, 185, 129, 0.1) !important;
-        color: #f0fdf4 !important;
+        background-color: #10b981 !important;
+        color: #064e3b !important; /* Dark text on emerald header */
         border-radius: 12px !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
+        margin-bottom: 2px !important;
+    }
+    .streamlit-expanderContent {
+        background-color: #0a2f24 !important; /* Matte dark emerald for content */
+        border: 1px solid rgba(16, 185, 129, 0.2) !important;
+        border-radius: 0 0 12px 12px !important;
+    }
+    
+    /* Fix: Slider & Input Visibility */
+    .stSlider label {
+        color: #ecfdf5 !important;
+        font-weight: 500 !important;
+        font-size: 0.9rem !important;
     }
     
     /* Fix: Global Text Colors (Avoiding Buttons) */
