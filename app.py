@@ -141,16 +141,16 @@ def render_inputs(features, group_name, icon, expanded=False):
                 key=feature
             )
 
-render_inputs(mean_features, "Mean Features", "📊", expanded=True)
-render_inputs(error_features, "Error Features", "📉")
-render_inputs(worst_features, "Worst Features", "📈")
-
 if st.sidebar.button("🎲 Randomize Patient Data"):
     for feature in feature_names:
         min_v = float(X_df[feature].min())
         max_v = float(X_df[feature].max())
         st.session_state[feature] = np.random.uniform(min_v, max_v)
     st.rerun()
+
+render_inputs(mean_features, "Mean Features", "📊", expanded=True)
+render_inputs(error_features, "Error Features", "📉")
+render_inputs(worst_features, "Worst Features", "📈")
 
 st.sidebar.divider()
 st.sidebar.info("🔒 Secured Medical Environment")
