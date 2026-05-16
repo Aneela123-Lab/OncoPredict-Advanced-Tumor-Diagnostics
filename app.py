@@ -21,71 +21,114 @@ st.set_page_config(
 # --- Custom CSS ---
 st.markdown("""
 <style>
-    /* Dark Theme Base */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+    /* Global Overrides */
     .stApp {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        color: #f8fafc;
+        background: #0b0f19;
+        font-family: 'Inter', sans-serif;
     }
     
-    /* Glowing Title */
-    .glow-title {
+    /* Glowing Title Effect */
+    .glow-header {
         font-family: 'Inter', sans-serif;
         font-weight: 800;
-        font-size: 3.5rem !important;
-        text-align: center;
-        background: linear-gradient(to right, #38bdf8, #818cf8);
+        background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-        margin-bottom: 2rem;
-        padding-top: 1rem;
+        font-size: 3rem !important;
+        text-align: center;
+        letter-spacing: -1px;
+        margin-bottom: 0.5rem;
+        filter: drop-shadow(0 0 15px rgba(96, 165, 250, 0.3));
     }
     
-    /* Glassmorphism Cards */
-    .metric-card {
-        background: rgba(30, 41, 59, 0.7);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        padding: 24px;
-        margin-bottom: 20px;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        transition: transform 0.3s ease;
+    /* Card System */
+    .glass-card {
+        background: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .metric-card:hover {
-        transform: translateY(-5px);
-        border: 1px solid rgba(56, 189, 248, 0.5);
+    .glass-card:hover {
+        transform: translateY(-8px);
+        border: 1px solid rgba(96, 165, 250, 0.3);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
     }
     
-    /* Custom Sidebar */
+    /* Risk Badges */
+    .risk-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 99px;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+    }
+    .risk-malignant { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .risk-benign { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    
+    /* Sidebar Overhaul */
     [data-testid="stSidebar"] {
-        background-color: #0f172a;
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: #0b1120;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
     }
     
-    /* Styled Buttons */
+    /* Metric Styling */
+    [data-testid="stMetricValue"] {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        color: #f8fafc !important;
+    }
+    
+    /* Buttons */
     .stButton>button {
-        background: linear-gradient(90deg, #0ea5e9 0%, #2563eb 100%);
+        width: 100%;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         color: white;
         border: none;
-        border-radius: 12px;
-        padding: 12px 24px;
+        border-radius: 14px;
+        padding: 14px;
         font-weight: 600;
-        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
     }
     .stButton>button:hover {
-        transform: scale(1.02);
-        box-shadow: 0 0 15px rgba(37, 99, 235, 0.6);
+        background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
     }
     
-    /* Text Styles */
-    h1, h2, h3 { color: #f1f5f9 !important; }
-    p, label { color: #94a3b8 !important; }
-    
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    /* Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 2rem;
+        background-color: transparent;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        white-space: pre-wrap;
+        background-color: transparent;
+        border-radius: 4px 4px 0 0;
+        gap: 1rem;
+        font-weight: 600;
+        color: #64748b;
+    }
+    .stTabs [aria-selected="true"] {
+        color: #3b82f6 !important;
+        border-bottom: 2px solid #3b82f6 !important;
+    }
+
+    /* Info Boxes */
+    .stInfo {
+        background-color: rgba(59, 130, 246, 0.05);
+        color: #93c5fd;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -157,13 +200,12 @@ st.sidebar.info("🔒 Secured Medical Environment")
 
 
 # --- Main App Header ---
-st.markdown("<h1 class='glow-title'>🧬 OncoPredict: Advanced Tumor Diagnostics</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='glow-header'>🧬 OncoPredict AI</h1>", unsafe_allow_html=True)
 st.markdown("""
-<p style='text-align: center; font-size: 1.2rem; margin-top: -1rem; color: #cbd5e1;'>
-    Optimized Predictive Analytics for Clinical Oncology
+<p style='text-align: center; font-size: 1.1rem; color: #94a3b8; max-width: 800px; margin: 0 auto 2rem auto;'>
+    Next-generation diagnostic platform leveraging high-dimensional cellular metrics for precise oncology forecasting.
 </p>
 """, unsafe_allow_html=True)
-st.divider()
 
 # --- Main Tabs ---
 tab1, tab2, tab3 = st.tabs(["📊 Diagnostic Dashboard", "🧠 Model Intelligence", "🔬 About OncoPredict"])
@@ -182,6 +224,13 @@ with tab1:
     pred_prob = probabilities[0] if is_malignant else probabilities[1]
     pred_color = "#ef4444" if is_malignant else "#10b981"
 
+    # Download Report data
+    report_content = f"--- OncoPredict Diagnostic Report ---\nDate: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    report_content += f"PREDICTION: {pred_label}\n"
+    report_content += f"CONFIDENCE: {pred_prob*100:.1f}%\n\n-- PATIENT METRICS --\n"
+    for k, v in input_data.items():
+        report_content += f"{k}: {v:.4f}\n"
+
     # Save to history
     if 'history' not in st.session_state:
         st.session_state.history = []
@@ -193,35 +242,30 @@ with tab1:
         st.session_state.history.append(current_meta)
 
     # --- Top Row: Results & Gauge ---
-    col1, col2 = st.columns([1.2, 2])
+    col1, col2 = st.columns([1, 2], gap="large")
 
     with col1:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-        st.subheader("Diagnostic Assessment")
-        if is_malignant:
-            st.error(f"### 🚨 {pred_label}\nHigh risk indicators detected. Immediate consultation recommended.")
-        else:
-            st.success(f"### ✅ {pred_label}\nMetrics align with benign morphologies.")
+        st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
+        risk_class = "risk-malignant" if is_malignant else "risk-benign"
+        st.markdown(f"<div class='risk-badge {risk_class}'>{pred_label} Detected</div>", unsafe_allow_html=True)
         
-        st.markdown(f"**Confidence Score:** `{pred_prob*100:.1f}%`")
+        st.subheader("Diagnostic Result")
+        msg = "High risk morphology. Immediate pathology review required." if is_malignant else "Morphology consistent with benign cell structures."
+        st.write(msg)
         
-        # Download Report button
-        report_content = f"--- OncoPredict Diagnostic Report ---\nDate: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-        report_content += f"PREDICTION: {pred_label}\n"
-        report_content += f"CONFIDENCE: {pred_prob*100:.1f}%\n\n-- PATIENT METRICS --\n"
-        for k, v in input_data.items():
-            report_content += f"{k}: {v:.4f}\n"
-            
+        st.metric("Confidence Score", f"{pred_prob*100:.1f}%")
+        
+        st.divider()
         st.download_button(
-            label="📄 Download Full Diagnostic Report",
+            label="📦 Export Clinical Report",
             data=report_content,
-            file_name=f"OncoPredict_Report_{datetime.now().strftime('%Y%m%d')}.txt",
+            file_name=f"OncoPredict_{datetime.now().strftime('%Y%m%d')}.txt",
             mime="text/plain"
         )
         st.markdown("</div>", unsafe_allow_html=True)
 
     with col2:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
         fig_gauge = go.Figure(go.Indicator(
             mode = "gauge+number",
             value = pred_prob * 100,
@@ -260,7 +304,7 @@ with tab1:
     col3, col4 = st.columns(2)
 
     with col3:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
         st.markdown("#### Patient Biomarkers vs. Demographics")
         radar_features = mean_features[:10]
         radar_benign = scaler.transform(pd.DataFrame([mean_benign])[feature_names])[0]
@@ -287,7 +331,7 @@ with tab1:
         st.markdown("</div>", unsafe_allow_html=True)
 
     with col4:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
         st.markdown("#### Random Forest Feature Importance")
         importances = model.feature_importances_
         indices = np.argsort(importances)[::-1][:10]
@@ -313,7 +357,7 @@ with tab1:
     col_hist, col_ai = st.columns([1, 1.5])
     
     with col_hist:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
         st.subheader("🕑 Prediction History")
         if st.session_state.history:
             hist_df = pd.DataFrame(st.session_state.history).iloc[::-1] # Reverse to show latest first
@@ -323,7 +367,7 @@ with tab1:
         st.markdown("</div>", unsafe_allow_html=True)
 
     with col_ai:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
         st.subheader("💡 AI Interpretability Insight")
         
         # Simple heuristic-based 'AI explanation'
@@ -341,7 +385,7 @@ with tab1:
         st.markdown("</div>", unsafe_allow_html=True)
 
 with tab2:
-    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
     st.subheader("Model Decision Logic")
     st.markdown("""
     The system utilizes a **Random Forest Ensemble** with 100+ decision trees. 
@@ -366,7 +410,7 @@ with tab2:
     st.markdown("</div>", unsafe_allow_html=True)
 
 with tab3:
-    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
     st.header("About the Clinical Portal")
     st.write("""
     This portal is designed to provide high-fidelity diagnostic predictions 
