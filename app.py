@@ -93,16 +93,13 @@ st.markdown("""
 
     /* Fix: Expander Visibility */
     .streamlit-expanderHeader {
-        background-color: #10b981 !important;
-        color: #064e3b !important; /* Dark text on emerald header */
+        background-color: transparent !important;
+        color: #fbbf24 !important; /* Golden text for headers */
         border-radius: 12px !important;
-        font-weight: 700 !important;
+        font-weight: 800 !important;
         margin-bottom: 2px !important;
-    }
-    .streamlit-expanderContent {
-        background-color: #0a2f24 !important; /* Matte dark emerald for content */
-        border: 1px solid rgba(16, 185, 129, 0.2) !important;
-        border-radius: 0 0 12px 12px !important;
+        font-size: 1.1rem !important;
+        border: 1px solid rgba(251, 191, 36, 0.2) !important;
     }
     
     /* Fix: Slider & Input Visibility (Targeting more specifically) */
