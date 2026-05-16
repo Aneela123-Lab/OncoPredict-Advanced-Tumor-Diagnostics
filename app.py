@@ -25,34 +25,34 @@ st.markdown("""
 
     /* Global Overrides */
     .stApp {
-        background: #0b0f19;
+        background: #0f1717; /* Deep Charcoal-Green */
         font-family: 'Inter', sans-serif;
-        color: #f8fafc;
+        color: #ecfdf5;
     }
     
     /* Glowing Title Effect */
     .glow-header {
         font-family: 'Inter', sans-serif;
         font-weight: 800;
-        background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
+        background: linear-gradient(135deg, #10b981 0%, #fbbf24 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-size: 3.5rem !important;
         text-align: center;
         letter-spacing: -2px;
         margin-bottom: 1rem;
-        filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.4));
+        filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.4));
     }
     
     /* Card System */
     .glass-card {
-        background: rgba(31, 41, 55, 0.7);
+        background: rgba(20, 26, 26, 0.8);
         backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.1);
         border-radius: 28px;
         padding: 2.5rem;
         margin-bottom: 2rem;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
     }
     
     /* Risk Badges */
@@ -67,46 +67,50 @@ st.markdown("""
         margin-bottom: 1.5rem;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
-    .risk-malignant { background: #ef4444; color: white; border: none; }
-    .risk-benign { background: #10b981; color: white; border: none; }
+    .risk-malignant { background: #dc2626; color: white; border: none; }
+    .risk-benign { background: #059669; color: white; border: none; }
     
     /* Visibility Fixes */
     h1, h2, h3, h4, h5, h6, p, span, label, .stMarkdown {
-        color: #f1f5f9 !important;
+        color: #f0fdf4 !important;
     }
     
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {
-        color: #cbd5e1 !important;
+    /* Sidebar Overhaul */
+    [data-testid="stSidebar"] {
+        background-color: #064e3b; /* Rich Emerald */
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] label, [data-testid="stSidebar"] h1 {
+        color: #d1fae5 !important;
     }
     
     /* Metric Styling */
     [data-testid="stMetricValue"] {
         font-family: 'JetBrains Mono', monospace;
         font-weight: 800;
-        color: #ffffff !important;
+        color: #fbbf24 !important; /* Gold */
         font-size: 2.5rem !important;
     }
     [data-testid="stMetricLabel"] {
-        color: #94a3b8 !important;
+        color: #6ee7b7 !important;
         font-size: 1rem !important;
     }
     
     /* Tabs Overhaul */
     .stTabs [data-baseweb="tab"] {
-        color: #94a3b8 !important;
+        color: #6ee7b7 !important;
         font-size: 1.1rem !important;
-        padding: 10px 20px !important;
     }
     .stTabs [aria-selected="true"] {
-        color: #60a5fa !important;
-        border-bottom-color: #60a5fa !important;
+        color: #fbbf24 !important;
+        border-bottom-color: #fbbf24 !important;
     }
 
     /* Additional UI - Pulse Effect */
     @keyframes pulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.05); opacity: 0.8; }
-        100% { transform: scale(1); opacity: 1; }
+        0% { filter: drop-shadow(0 0 5px rgba(220, 38, 38, 0.5)); }
+        50% { filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.8)); }
+        100% { filter: drop-shadow(0 0 5px rgba(220, 38, 38, 0.5)); }
     }
     .pulse-glow {
         animation: pulse 2s infinite ease-in-out;
@@ -237,6 +241,11 @@ with tab1:
         st.write(msg)
         
         st.metric("Confidence Score", f"{pred_prob*100:.1f}%")
+        
+        # Risk Slider (Static Visualization)
+        st.write("---")
+        risk_val = pred_prob * 100 if is_malignant else (1 - pred_prob) * 100
+        st.select_slider("Risk Intensity Level", options=["Stable", "Normal", "Elevated", "Concern", "Critical"], value=["Stable", "Normal", "Elevated", "Concern", "Critical"][int(min(risk_val//20, 4))], disabled=True)
         
         st.divider()
         st.download_button(
@@ -402,17 +411,21 @@ with tab2:
 
 with tab3:
     st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
-    st.header("About the Clinical Portal")
+    st.header("🔬 Clinical Intelligence & Research")
+    
     st.write("""
-    This portal is designed to provide high-fidelity diagnostic predictions 
-    using morphological data from cellular scans. 
+    ### Medical Attribute Glossary
+    This portal analyzes cellular morphologies based on the following key metrics:
     
-    ### How it works:
-    1. **Data Acquisition**: Metrics are extracted from digitized FNA images.
-    2. **Processing**: Features are scaled using a standard normal distribution.
-    3. **Inference**: The pre-trained Random Forest model evaluates the risk.
-    4. **Visualization**: Real-time feedback is provided via interactive charts.
+    - **Mean Radius**: Average distance from center to points on the perimeter.
+    - **Mean Texture**: Standard deviation of gray-scale values.
+    - **Mean Perimeter**: Total length of the tumor boundary.
+    - **Mean Area**: Total surface area of the tumor cell.
+    - **Concavity**: Severity of concave portions of the contour.
     
-    *Note: This is a research prototype.*
+    ### Reference Research
+    This model was developed using the dataset provided by **Dr. William H. Wolberg** (University of Wisconsin), which is considered the gold standard in diagnostic oncology for predictive modeling.
+    
+    *Disclaimer: This tool is intended for research support only.*
     """)
     st.markdown("</div>", unsafe_allow_html=True)
