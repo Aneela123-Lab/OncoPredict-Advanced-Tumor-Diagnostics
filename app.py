@@ -27,6 +27,7 @@ st.markdown("""
     .stApp {
         background: #0b0f19;
         font-family: 'Inter', sans-serif;
+        color: #f8fafc;
     }
     
     /* Glowing Title Effect */
@@ -36,98 +37,79 @@ st.markdown("""
         background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 3rem !important;
+        font-size: 3.5rem !important;
         text-align: center;
-        letter-spacing: -1px;
-        margin-bottom: 0.5rem;
-        filter: drop-shadow(0 0 15px rgba(96, 165, 250, 0.3));
+        letter-spacing: -2px;
+        margin-bottom: 1rem;
+        filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.4));
     }
     
     /* Card System */
     .glass-card {
-        background: rgba(17, 24, 39, 0.7);
+        background: rgba(31, 41, 55, 0.7);
         backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 24px;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .glass-card:hover {
-        transform: translateY(-8px);
-        border: 1px solid rgba(96, 165, 250, 0.3);
-        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 28px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
     
     /* Risk Badges */
     .risk-badge {
         display: inline-block;
-        padding: 6px 16px;
-        border-radius: 99px;
-        font-weight: 700;
+        padding: 8px 20px;
+        border-radius: 12px;
+        font-weight: 800;
         text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 1px;
-        margin-bottom: 1rem;
+        font-size: 0.85rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
-    .risk-malignant { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-    .risk-benign { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .risk-malignant { background: #ef4444; color: white; border: none; }
+    .risk-benign { background: #10b981; color: white; border: none; }
     
-    /* Sidebar Overhaul */
-    [data-testid="stSidebar"] {
-        background-color: #0b1120;
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
+    /* Visibility Fixes */
+    h1, h2, h3, h4, h5, h6, p, span, label, .stMarkdown {
+        color: #f1f5f9 !important;
+    }
+    
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {
+        color: #cbd5e1 !important;
     }
     
     /* Metric Styling */
     [data-testid="stMetricValue"] {
         font-family: 'JetBrains Mono', monospace;
-        font-weight: 700;
-        color: #f8fafc !important;
+        font-weight: 800;
+        color: #ffffff !important;
+        font-size: 2.5rem !important;
+    }
+    [data-testid="stMetricLabel"] {
+        color: #94a3b8 !important;
+        font-size: 1rem !important;
     }
     
-    /* Buttons */
-    .stButton>button {
-        width: 100%;
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        color: white;
-        border: none;
-        border-radius: 14px;
-        padding: 14px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-    }
-    .stButton>button:hover {
-        background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
-    }
-    
-    /* Tabs */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 2rem;
-        background-color: transparent;
-    }
+    /* Tabs Overhaul */
     .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        white-space: pre-wrap;
-        background-color: transparent;
-        border-radius: 4px 4px 0 0;
-        gap: 1rem;
-        font-weight: 600;
-        color: #64748b;
+        color: #94a3b8 !important;
+        font-size: 1.1rem !important;
+        padding: 10px 20px !important;
     }
     .stTabs [aria-selected="true"] {
-        color: #3b82f6 !important;
-        border-bottom: 2px solid #3b82f6 !important;
+        color: #60a5fa !important;
+        border-bottom-color: #60a5fa !important;
     }
 
-    /* Info Boxes */
-    .stInfo {
-        background-color: rgba(59, 130, 246, 0.05);
-        color: #93c5fd;
-        border: 1px solid rgba(59, 130, 246, 0.2);
+    /* Additional UI - Pulse Effect */
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.05); opacity: 0.8; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    .pulse-glow {
+        animation: pulse 2s infinite ease-in-out;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -247,7 +229,8 @@ with tab1:
     with col1:
         st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
         risk_class = "risk-malignant" if is_malignant else "risk-benign"
-        st.markdown(f"<div class='risk-badge {risk_class}'>{pred_label} Detected</div>", unsafe_allow_html=True)
+        pulse_class = "pulse-glow" if is_malignant else ""
+        st.markdown(f"<div class='risk-badge {risk_class} {pulse_class}'>{pred_label} Detected</div>", unsafe_allow_html=True)
         
         st.subheader("Diagnostic Result")
         msg = "High risk morphology. Immediate pathology review required." if is_malignant else "Morphology consistent with benign cell structures."
@@ -382,6 +365,14 @@ with tab1:
             
         st.write(explainer_text)
         st.progress(pred_prob, text=f"Malignancy Risk Index: {pred_prob*100:.1f}%")
+        
+        with st.expander("🩺 Clinical Consultation Summary", expanded=is_malignant):
+            if is_malignant:
+                st.warning("🚨 **Recommendation**: This profile suggests high geometric irregularity. Proceed with core-needle biopsy and immunohistochemistry (IHC) profiling.")
+            else:
+                st.success("✅ **Recommendation**: Current metrics indicate standard benign morphology. Routine screening (6-12 months) is generally sufficient.")
+            st.caption("AI-generated insight for clinical guidance.")
+        
         st.markdown("</div>", unsafe_allow_html=True)
 
 with tab2:
