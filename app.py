@@ -105,16 +105,21 @@ st.markdown("""
         border-radius: 0 0 12px 12px !important;
     }
     
-    /* Fix: Slider & Input Visibility */
-    .stSlider label {
-        color: #ecfdf5 !important;
-        font-weight: 500 !important;
-        font-size: 0.9rem !important;
+    /* Fix: Slider & Input Visibility (Targeting more specifically) */
+    [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {
+        color: #f0fdf4 !important;
+        font-weight: 700 !important;
+        font-size: 1rem !important;
     }
     
-    /* Fix: Global Text Colors (Avoiding Buttons) */
-    p, span, label, .stMarkdown {
-        color: #f0fdf4;
+    /* Fix: Slider Value Visibility */
+    [data-testid="stSidebar"] [data-testid="stTickBarMin"], 
+    [data-testid="stSidebar"] [data-testid="stTickBarMax"] {
+        color: #6ee7b7 !important;
+    }
+
+    [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p {
+        color: #ecfdf5 !important;
     }
     h1, h2, h3, h4, h5, h6 {
         color: #f0fdf4 !important;
