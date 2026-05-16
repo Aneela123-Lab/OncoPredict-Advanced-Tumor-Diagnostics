@@ -25,7 +25,7 @@ st.markdown("""
 
     /* Global Overrides */
     .stApp {
-        background: #0f1717; /* Deep Charcoal-Green */
+        background: #0f1717;
         font-family: 'Inter', sans-serif;
         color: #ecfdf5;
     }
@@ -65,35 +65,57 @@ st.markdown("""
         font-size: 0.85rem;
         letter-spacing: 1.5px;
         margin-bottom: 1.5rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     .risk-malignant { background: #dc2626; color: white; border: none; }
     .risk-benign { background: #059669; color: white; border: none; }
     
-    /* Visibility Fixes */
-    h1, h2, h3, h4, h5, h6, p, span, label, .stMarkdown {
-        color: #f0fdf4 !important;
-    }
-    
     /* Sidebar Overhaul */
     [data-testid="stSidebar"] {
-        background-color: #064e3b; /* Rich Emerald */
+        background-color: #064e3b;
         border-right: 1px solid rgba(255, 255, 255, 0.1);
     }
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] label, [data-testid="stSidebar"] h1 {
-        color: #d1fae5 !important;
+    
+    /* Fix: Button Visibility */
+    .stButton>button, .stDownloadButton>button {
+        background: #10b981 !important;
+        color: #064e3b !important; /* Dark text on bright emerald button */
+        font-weight: 700 !important;
+        border-radius: 14px !important;
+        border: none !important;
+        height: 3rem !important;
+    }
+    .stButton>button:hover, .stDownloadButton>button:hover {
+        background: #fbbf24 !important; /* Gold on hover */
+        color: #064e3b !important;
+        transform: translateY(-2px);
+        transition: all 0.2s;
+    }
+
+    /* Fix: Expander Visibility */
+    .streamlit-expanderHeader {
+        background-color: rgba(16, 185, 129, 0.1) !important;
+        color: #f0fdf4 !important;
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Fix: Global Text Colors (Avoiding Buttons) */
+    p, span, label, .stMarkdown {
+        color: #f0fdf4;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        color: #f0fdf4 !important;
     }
     
     /* Metric Styling */
     [data-testid="stMetricValue"] {
         font-family: 'JetBrains Mono', monospace;
         font-weight: 800;
-        color: #fbbf24 !important; /* Gold */
+        color: #fbbf24 !important;
         font-size: 2.5rem !important;
     }
     [data-testid="stMetricLabel"] {
         color: #6ee7b7 !important;
-        font-size: 1rem !important;
     }
     
     /* Tabs Overhaul */
@@ -104,16 +126,6 @@ st.markdown("""
     .stTabs [aria-selected="true"] {
         color: #fbbf24 !important;
         border-bottom-color: #fbbf24 !important;
-    }
-
-    /* Additional UI - Pulse Effect */
-    @keyframes pulse {
-        0% { filter: drop-shadow(0 0 5px rgba(220, 38, 38, 0.5)); }
-        50% { filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.8)); }
-        100% { filter: drop-shadow(0 0 5px rgba(220, 38, 38, 0.5)); }
-    }
-    .pulse-glow {
-        animation: pulse 2s infinite ease-in-out;
     }
 </style>
 """, unsafe_allow_html=True)
